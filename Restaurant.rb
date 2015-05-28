@@ -1,18 +1,16 @@
 class Restaurant
-@menu
-@order
-@cost
   def initialize(menu)
   @cost=0
   @menu=menu
   @customerorder=Hash.new
+  @order
   end
 
 
 def add_menu 
 	input=""
 	while input!="y"
-		puts "enter menu item"
+    puts "enter menu item"
     item = gets.chomp
     if @menu.has_key?(item)
       puts "item already present"
@@ -66,11 +64,9 @@ end
   		puts"enter y if order closed"
   		input = gets.chomp 
   	end
-
-  #@customerorder[customer]<<order
-  @customerorder[customer]=order
- 	@order=@customerorder
- 	puts @order
+    @customerorder[customer]=order
+ 	  @order=@customerorder
+ 	  puts @order
   
  end
   
@@ -78,20 +74,22 @@ end
  def bill_amount
   puts "Name of the customer:"
   name = gets.chomp
- 	puts "item  quantity \n"
+  if @order.has_key?(name)
+ 	  puts "item  quantity \n"
    	@order[name].each do |item, quantity|
    	@cost= @cost.to_i + quantity.to_i* @menu[item].to_i
    	puts "#{item}  #{quantity} \n"
     end
     puts "TOTAL COST OF CUSTOMER  is #{@cost}"
+  else
+    puts "no customer"
+  end  
  end
- 
-end
-	
+end	
 
 qmenu = Restaurant.new("rice" => 40,"noodles" => 65)
 choice=0
-while choice!="5"
+while choice!="6"
 	puts " 1.Change the menu \n 2. delete item \n 3.Show menu \n 4.Give order for customer \n 5.Print bill \n 6.Exit \n Enter your choice : "
 	choice = gets.chomp
 	case choice
@@ -108,5 +106,5 @@ while choice!="5"
  		when '6'
   			puts "Exiting"
   			exit 
-		end
+	end
 end
