@@ -1,43 +1,62 @@
 class Restaurant
-@@menu
+@menu
 @order
 @cost
   def initialize(menu)
   @cost=0
-  @@menu=menu
+  @menu=menu
+  @customerorder=Hash.new
   end
 
 
-  def change_menu 
-	menu=Hash.new
+def add_menu 
 	input=""
 	while input!="y"
 		puts "enter menu item"
-		item = gets.chomp 
-		puts "enter item price"
-		cost = gets.chomp 
-		menu[item] = cost
+    item = gets.chomp
+    if @menu.has_key?(item)
+      puts "item already present"
+      puts "enter item new price"
+      cost = gets.chomp 
+    else    
+    puts "enter item price"
+    cost = gets.chomp 
+    end
+    @menu[item]=cost
 		puts"enter y if completed entering todays menu"
 		input = gets.chomp 
 	end
-	@@menu=menu
-  end
+end
 
 
+
+def delete_menu
+  puts "The menu Item to be deleted :"
+  item = gets.chomp 
+  if @menu.has_key?(item)
+     @menu.delete(item)
+  else
+     puts "no such item" 
+  end     
+  puts @menu
+end
 
  def show_menu
  	puts "The menu Items are \n"
- 	puts @@menu
+ 	puts @menu
  end
 
 
  def enter_order
-    order=Hash.new	
+    order=Hash.new
+    #customerorder=Hash.new
     input=""
+    puts "enter customer name :"
+      customer = gets.chomp 
     while input!="y"
     	puts "enter menu item"
    		item = gets.chomp 
-   		if @@menu.has_key?(item)
+   		if @menu.has_key?(item)
    	 		puts "enter item quantity"
     		quantity = gets.chomp 
     		order[item] = quantity
@@ -47,15 +66,21 @@ class Restaurant
   		puts"enter y if order closed"
   		input = gets.chomp 
   	end
- 	@order=order
+
+  #@customerorder[customer]<<order
+  @customerorder[customer]=order
+ 	@order=@customerorder
  	puts @order
+  
  end
   
 
  def bill_amount
+  puts "Name of the customer:"
+  name = gets.chomp
  	puts "item  quantity \n"
-   	@order.each do |item, quantity|
-   	@cost= @cost.to_i + quantity.to_i* @@menu[item].to_i
+   	@order[name].each do |item, quantity|
+   	@cost= @cost.to_i + quantity.to_i* @menu[item].to_i
    	puts "#{item}  #{quantity} \n"
     end
     puts "TOTAL COST OF CUSTOMER  is #{@cost}"
@@ -67,18 +92,20 @@ end
 qmenu = Restaurant.new("rice" => 40,"noodles" => 65)
 choice=0
 while choice!="5"
-	puts " 1.Change the menu \n 2.Show menu \n 3.Give order for customer \n 4.Print bill \n 5.Exit \n Enter your choice : "
+	puts " 1.Change the menu \n 2. delete item \n 3.Show menu \n 4.Give order for customer \n 5.Print bill \n 6.Exit \n Enter your choice : "
 	choice = gets.chomp
 	case choice
 		when '1'
-			qmenu.change_menu
-		when '2'
-  			qmenu.show_menu
+			qmenu.add_menu
+    when '2'
+      qmenu.delete_menu  
 		when '3'
-  			qmenu.enter_order
+  			qmenu.show_menu
 		when '4'
+  			qmenu.enter_order
+		when '5'
   			qmenu.bill_amount
- 		when '5'
+ 		when '6'
   			puts "Exiting"
   			exit 
 		end
